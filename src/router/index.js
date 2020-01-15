@@ -6,6 +6,7 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    //ルートパスの設定
     path: '/',
     name: 'home',
     component: Home

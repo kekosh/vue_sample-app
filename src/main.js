@@ -6,6 +6,7 @@ import store from './store'
 Vue.config.productionTip = false
 
 new Vue({
+  //省略しなければ「router: router」
   router,
   store,
   render: h => h(App)
