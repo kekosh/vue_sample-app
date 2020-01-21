@@ -4,18 +4,20 @@
       <v-app-bar-nav-icon @click.stop="toggleSideMenu"></v-app-bar-nav-icon>
       <v-toolbar-title>マイアドレス帳</v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-appbar-items v-if="$store.state.login_user">
+        <v-btn @click="logout">ログアウト</v-btn>
+      </v-appbar-items>
     </v-app-bar>
     <SideNav />
 
     <v-content>
-      <v-container fluid fill-height align-start>
-        <router-view />
-      </v-container>
+      <router-view />
     </v-content>
   </v-app>
 </template>
 
 <script>
+import firebase from "firebase";
 import SideNav from "./components/SideNav";
 import { mapActions } from "vuex";
 
@@ -24,11 +26,28 @@ export default {
   components: {
     SideNav
   },
+  //ライフサイクルフック(初期化時に所定のタイミングで実行される処理)
+  created() {
+    // ログイン、ログアウト時にuserオブジェクトがcallback関数に渡される。(非同期)
+    // ログイン時はuserオブジェクト、ログアウト時はNullが渡される。
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.setLoginUser(user);
+      } else {
+        this.deleteLoginUser();
+      }
+    });
+  },
   data: () => ({
     //
   }),
   methods: {
-    ...mapActions(["toggleSideMenu"])
+    ...mapActions([
+      "toggleSideMenu",
+      "setLoginUser",
+      "logout",
+      "deleteLoginUser"
+    ])
   }
 };
 </script>
