@@ -46,18 +46,35 @@ export default new Vuex.Store({
     logout() {
       firebase.auth().signOut();
     },
+    //get address-data from firebase
+    fetchAddresses({ getters, commit }) {
+      firebase
+        .firestore()
+        .collection(`users/${getters.uid}/addresses`)
+        .get()
+        .then(snapshot => {
+          snapshot.forEach(doc => commit("addAddress", doc.data()));
+        });
+    },
     toggleSideMenu({ commit }) {
       //「commit」・・・mutaionに定義されている同名メソッドを実行する。
       commit("toggleSideMenu");
     },
     //actionの第2引数以降にmutationにわたす値の引数を取れる。
-    addAddress({ commit }, address) {
+    addAddress({ getters, commit }, address) {
+      if (getters.uid) {
+        firebase
+          .firestore()
+          .collection(`users/${getters.uid}/addresses`)
+          .add(address);
+      }
       commit("addAddress", address);
     }
   },
   //gettersには自動的にstateが渡される。
   getters: {
     userName: state => (state.login_user ? state.login_user.displayName : ""),
-    photoURL: state => (state.login_user ? state.login_user.photoURL : "")
+    photoURL: state => (state.login_user ? state.login_user.photoURL : ""),
+    uid: state => (state.login_user ? state.login_user.uid : null)
   }
 });
