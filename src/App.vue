@@ -4,9 +4,9 @@
       <v-app-bar-nav-icon v-show="$store.state.login_user" @click.stop="toggleSideMenu"></v-app-bar-nav-icon>
       <v-toolbar-title>マイアドレス帳</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-appbar-items v-if="$store.state.login_user">
+      <v-app-bar-items v-if="$store.state.login_user">
         <v-btn @click="logout">ログアウト</v-btn>
-      </v-appbar-items>
+      </v-app-bar-items>
     </v-app-bar>
     <SideNav />
 
